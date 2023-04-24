@@ -36,7 +36,7 @@ router.post(
         id: user.id,
         email: user.email
       },
-      'replaceMePlease'
+      process.env.JWT_KEY!
     )
 
     // Store it on req.session object(that is automatically created by cookie-session package)
