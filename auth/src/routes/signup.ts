@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express'
 import { body } from 'express-validator'
 import jwt from 'jsonwebtoken'
+
+import { validateRequest } from '../middlewares/validate-request'
 import { User } from '../models/user'
 import { BadRequestError } from '../errors/bad-request-error'
-import { validateRequest } from '../middlewares/validate-request'
 
 const router = express.Router()
 
@@ -16,16 +17,17 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { email, password } = req.body
-    const exisitingUser = await User.findOne({ email })
 
-    if (exisitingUser) {
+    const existingUser = await User.findOne({ email })
+
+    if (existingUser) {
       throw new BadRequestError('Email in use')
     }
 
     const user = User.build({ email, password })
     await user.save()
 
-    //Generate JWT
+    // Generate JWT
     const userJwt = jwt.sign(
       {
         id: user.id,
@@ -34,7 +36,7 @@ router.post(
       process.env.JWT_KEY!
     )
 
-    // Store it on req.session object(that is automatically created by cookie-session package)
+    // Store it on session object
     req.session = {
       jwt: userJwt
     }
