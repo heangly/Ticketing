@@ -1,12 +1,24 @@
 import { useState } from 'react'
+import Router from 'next/router'
+import useRequest from '../../hooks/use-request'
+
 const signup = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const { doRequest, errors } = useRequest({
+    url: '/api/users/signup',
+    method: 'post',
+    body: {
+      email,
+      password
+    },
+    onSuccess: () => Router.push('/')
+  })
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     if (!!!email.trim().length || !!!password.trim().length) return
-    console.log(email, password)
+    doRequest()
   }
 
   return (
@@ -28,7 +40,9 @@ const signup = () => {
         />
       </div>
 
-      <button type='submit' className='btn btn-primary'>
+      {errors}
+
+      <button type='submit' className='btn btn-primary mt-3'>
         Sign up
       </button>
     </form>

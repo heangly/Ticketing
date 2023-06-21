@@ -28,7 +28,7 @@ app.use(signupRouter)
 app.use(signoutRouter)
 
 // any undefined routes
-app.all('*', async () => {
+app.all('*', () => {
   // Synchronous code work with no extra work. Throw new error is enough
   // Async code will need next() OR we can use NPM package (express-async-errors) to change default behavior of Express, using (express-async-errors) you can just throw error (no need async)
   throw new NotFoundError()
