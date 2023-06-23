@@ -2,10 +2,16 @@ import axios from 'axios'
 
 // render each component with pre fetch data ONE TIME
 // This function will be execute on Server, so this code wont show up on client side
-export const getStaticProps = async () => {
+export const getServerSideProps = async ({ req }) => {
+  const baseUrl = 'http://ingress-nginx-controller.ingress-nginx.svc.cluster.local'
+  const url = `${baseUrl}/api/users/currentuser`
+
   try {
-    const response = await axios.get('/api/users/currentuser')
-    return { props: { currentUser: response.data } }
+    const { data } = await axios.get(url, {
+      headers: req.headers
+    })
+
+    return { props: { currentUser: data.currentUser } }
   } catch (error) {
     console.log(error.message)
     return { props: { currentUser: null } }
@@ -13,7 +19,7 @@ export const getStaticProps = async () => {
 }
 
 const LandingPage = ({ currentUser }) => {
-  console.log(`I am on component, ${currentUser}`)
+  console.log(currentUser)
   return <div>LandingPage</div>
 }
 
