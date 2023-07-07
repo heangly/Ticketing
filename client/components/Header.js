@@ -8,7 +8,7 @@ const Header = ({ currentUser }) => {
   ]
     .filter((linkConfig) => linkConfig)
     .map(({ label, href }) => (
-      <li key={href}>
+      <li className='nav-item mx-3' key={href}>
         <Link href={href}>{label}</Link>
       </li>
     ))
