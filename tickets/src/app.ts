@@ -4,6 +4,7 @@ import { json } from 'body-parser'
 import cookieSession from 'cookie-session'
 import { errorHandler, NotFoundError, currentUser } from '@heangtickets/common'
 import { createTicketRouter } from './routes/new'
+import { showTicketRouter } from './routes/show'
 
 const app = express()
 // make sure it is behind the proxy and still trust the traffic as secure
@@ -20,6 +21,7 @@ app.use(
 
 app.use(currentUser)
 app.use(createTicketRouter)
+app.use(showTicketRouter)
 
 // any undefined routes
 app.all('*', () => {
